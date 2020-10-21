@@ -1,0 +1,121 @@
+% [survived pclass sex age sibsp parch fare cabin embarked]=textread('C:\Users\admini\Desktop\bbb.txt','%d%d%s%f%d%d%f%s%s','headerlines',0);
+[pclass sex age sibsp parch fare cabin embarked]=textread('C:\Users\admini\Desktop\aaaaa\survivor\shiyan\shiyan.txt','%d%s%f%d%d%f%s%s','headerlines',0);
+% target=survived;
+% target=[target ones(length(target),1)-target];
+% save('C:\Users\admini\Desktop\aaaaa\survivor\labelzong.mat','target','-mat');
+
+ji_pclass=eye(4);
+ji_sibsp=eye(30);
+ji_parch=ji_sibsp;
+ji_fare=eye(2000);
+ji_cabin=eye(9);
+ji_age=eye(100);
+sibsp_=zeros(length(sex),30);
+parch_=sibsp_;
+age_=zeros(length(sex),100);
+for jishu=1:length(sex)
+    
+    %社会阶层
+    if(pclass(jishu)==1)
+        pclass_(jishu,:)=ji_pclass(1,:);
+    elseif pclass(jishu)==2
+        pclass_(jishu,:)=ji_pclass(2,:);
+    elseif pclass(jishu)==3
+        pclass_(jishu,:)=ji_pclass(3,:);
+    else
+        pclass_(jishu,:)=ji_pclass(4,:);
+    end
+    
+    %性别
+    if strcmp(sex{jishu},'female')
+        sex_(jishu,:)=[1 0];
+    else sex_(jishu,:)=[0 1];
+    end
+    
+    %年龄
+    for jishu1=1:100
+        if age(jishu)==jishu1
+            age_(jishu,:)=ji_age(jishu1,:);
+        end
+    end
+    
+    %亲人1
+    for jishu1=1:30
+        if sibsp(jishu)==jishu1
+            sibsp_(jishu,:)=ji_sibsp(jishu1,:); 
+        end
+    end
+    
+    %亲人2
+    for jishu1=1:30
+        if parch(jishu)==jishu1
+            parch_(jishu,:)=ji_parch(jishu1,:);
+        end
+    end
+    
+    %票价
+    fare=fix(fare);
+    for jishu1=1:2000
+        if fare(jishu)==jishu1
+            fare_(jishu,:)=ji_fare(jishu1,:);
+        else fare_(jishu,:)=ji_fare(2000,:);
+        end
+    end
+    
+    %仓位
+    if strcmp(cabin{jishu},'0')
+        cabin_(jishu,:)=ji_cabin(1,:);
+    elseif find(cabin{jishu},'A')
+        cabin_(jishu,:)=ji_cabin(2,:);
+    elseif find(cabin{jishu},'B')
+        cabin_(jishu,:)=ji_cabin(3,:);
+    elseif find(cabin{jishu},'C')
+        cabin_(jishu,:)=ji_cabin(4,:);
+    elseif find(cabin{jishu},'D')
+        cabin_(jishu,:)=ji_cabin(5,:);
+    elseif find(cabin{jishu},'E')
+        cabin_(jishu,:)=ji_cabin(6,:);
+    elseif find(cabin{jishu},'F')
+        cabin_(jishu,:)=ji_cabin(7,:);
+    elseif find(cabin{jishu},'G')
+        cabin_(jishu,:)=ji_cabin(8,:);
+    else
+        cabin_(jishu,:)=ji_cabin(9,:);
+    end
+    
+    %港口
+    if strcmp(embarked{jishu},'S')
+        embarked_(jishu,:)=[1 0 0 0];
+    elseif strcmp(embarked{jishu},'C')
+        embarked_(jishu,:)=[0 1 0 0];
+    elseif strcmp(embarked{jishu},'Q')
+        embarked_(jishu,:)=[0 0 1 0];
+    else
+        embarked_(jishu,:)=[0 0 0 1];
+    end
+    fprintf('%d\n',jishu);
+end
+data=[pclass_ sex_	age_	sibsp_	parch_	fare_	cabin_ embarked_];
+% save('C:\Users\admini\Desktop\aaaaa\survivor\zong.mat','data','-mat');
+save('C:\Users\admini\Desktop\aaaaa\survivor\zong-shiyan.mat','data','-mat');
+
+       
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        

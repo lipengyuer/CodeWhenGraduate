@@ -1,0 +1,6 @@
+shuju=sortrows(data2,2);
+test_x=shuju(:,6:end);
+test_y=shuju(:,3:4);
+yiyangma;
+
+weizhi=find(shuju~=shuju1(:,end-1));

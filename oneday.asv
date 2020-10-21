@@ -1,0 +1,23 @@
+function [zhuanfa,fensi]=oneday(x,y);
+b=zeros(1,144)';
+g=zeros(1,144)';
+       for m=0:23
+          for n=0:12
+             for a=1:3618
+                
+                 if x(a)>(m+0.05*n)&&x(a)<(m+0.05*n+0.05)
+                  b(m*6+n+1)=b(m*6+n+1)+1;
+                  g(m*6+n+1)=g(m*6+n+1)+y(a);
+                 end
+             end
+          end
+       end
+zhuanfa=b;
+fensi=g;
+ end     
+      
+
+ 
+   
+    
+

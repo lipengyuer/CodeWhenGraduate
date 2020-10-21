@@ -1,0 +1,19 @@
+function [T1 T2 EF1 EF2]=quan(x,yanchi)
+[a1]=zonghe(x);
+shu=length(a1);
+[T1 RN1 RI1 EF1]=fit1(a1);
+aa1=fun1(T1,[1:shu])';
+[b1 b2]=zonghet(x);
+[T2 RN2 RI2 EF2]=fit1t1(aa1,b2,yanchi,b1);
+%jisuanzhi=fun1(T1,[0:1000])*T2*[0 b2(1:1000)];
+jisuan1=fun1(T1,[1:length(a1)])';
+jisuan2=jisuan1*T2.*b2;
+shiji=a1/sum(a1);
+cancha1=jisuan1-shiji;
+cancha2=jisuan2-shiji;
+hzb=[1:length(a1)];
+plot(log(hzb),jisuan1,'r');hold on,plot(log(hzb),jisuan2,'g');hold on,plot(log(hzb),shiji);
+plot(cacha1,'r');hold on,plot(cancha2,'g')
+plot(log(hzb),cumsum(jisuan1),'r');hold on,plot(log(hzb),cumsum(jisuan2),'g');hold on,plot(log(hzb),cumsum(shiji));
+
+end

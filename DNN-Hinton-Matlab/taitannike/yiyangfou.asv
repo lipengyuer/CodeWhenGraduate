@@ -1,0 +1,34 @@
+  Input = alldata;%alldata是新来的数据，内容为类型未知样本的属性值
+%   mubiao =test_y;
+  Counter = 0;
+  Error = 0;
+  NumofSamples = 1325;%样本个数
+   = [shuru ones(N,1)];
+
+  w1p = 1./(1 + exp(-shuru*w1)); w1p = [w1p  ones(N,1)];
+  w2p = 1./(1 + exp(-w1p*w2)); w2p = [w2p ones(N,1)];
+  w3p = 1./(1 + exp(-w2p*w3)); w3p = [w3p  ones(N,1)];
+  
+  Outputof3rdRBM = exp(w3p*w_class);
+  OutputofSoftmax = mubiaoout./repmat(sum(Outputof3rdRBM,2),1,2);
+% 
+%   [CA LE]=max(mubiaoout,[],2);
+%   [CA1 LE1]=max(mubiao,[],2);
+%   jishuqi=jishuqi+length(find(LE==LE1));
+%   wucha = wucha- sum(sum( mubiao(:,1:end).*log(mubiaoout))) ;
+  
+%   count=0;
+%   ermubiaoout=mubiaoout;
+BinaryOutputofSoftmax=zeros(size(OutputofSoftmax));
+ActualOutput=zeros(size(OutputofSoftmax,1),1);
+  for n=1:N
+      for m=1
+          if(OutputofSoftmax(n,m)>0.5)
+             BinaryOutputofSoftmax(n,m)=1;    
+          elseif(OutputofSoftmax(n,m)<=0.5)
+              BinaryOutputofSoftmax(n,m)=0;
+          else BinaryOutputofSoftmax(n,m)=nan;
+          end
+      end
+  end
+ 

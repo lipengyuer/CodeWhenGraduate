@@ -1,0 +1,35 @@
+function [y1,z1]=test(x)
+
+x1=x(:,1)';
+x2=x(:,2)';
+b=zeros(1,1152);
+g=zeros(1,1152);
+
+b1=zeros(4,288);
+g1=zeros(4,288);
+y1=zeros(4,10000);
+z1=zeros(4,10000);
+t=zeros(1,4);
+e=1;
+p=1;
+q=1;
+while 1
+    while  x1(1,p)<=24
+        t(1,e)=t(1,e)+1;
+        p=p+1;
+    end
+
+   % p=1;
+    for q=1:t(1,e);
+    y1(e,q)=x1(p);
+    z1(e,q)=x2(p);
+    p=p+1;
+    end
+    p=1;
+    e=e+1;
+   
+if e==5;
+    break;
+end%
+end
+end

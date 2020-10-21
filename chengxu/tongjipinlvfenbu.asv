@@ -1,0 +1,11 @@
+function pinlvfenbu=tongjipinlvfenbu(x)%统计一个数列中，各水平的样本数量
+zhouqishu=40;
+pinlvfenbu=zeros(zhouqishu,1);
+for m=1:zhouqishu
+    for n=1:length(x)
+        if(x(n)>=(m-1)*buchang&&x(n)<m*buchang)
+           pinlvfenbu(m)=pinlvfenbu(m)+1;
+        end
+    end
+end
+end

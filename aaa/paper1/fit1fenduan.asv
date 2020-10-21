@@ -1,0 +1,22 @@
+function [T norm res ef]=fit1fenduan(x)
+%shuru=[0:(length(x)-1)]';
+jishuqi=0;
+% for m=1:length(x)
+%     jishuqi=jishuqi+1;
+%     zuida(jishuqi)=max(x(1:m));
+%     if(zuida(jishuqi))
+
+shuru1=[1:length(x1)]';
+y=x/sum(x);
+x1=y(1:71);
+x2=y(72:end);
+T=[100*rand 0.01*rand];
+%T=5;
+[a s d f]=lsqcurvefit(@fun1,T,shuru,y);
+T=a;
+norm=s;
+res=d;
+ef=f;
+%w=r;
+
+end

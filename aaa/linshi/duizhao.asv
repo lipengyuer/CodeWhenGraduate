@@ -1,0 +1,18 @@
+function DD=duizhao
+% Df = cell(1,10);
+for d=0:9,
+%  fclose(Df{d+1});
+  D = load(['digit' num2str(d) '.ascii'],'-ascii');
+  xushu=randperm(length(D));
+  DD(:,:,d+1)=D(xushu(1:100),:);
+  fprintf('%5d Digits of class %d\n',size(DD,1),d);
+  save(['digit' num2str(d) '.mat'],'DD','-mat');%digit0存储的是数字0对应的所有数据信息
+  
+end;
+
+for d=0:9,
+ % fclose(Df{d+1});%关闭Df{d+1}，停止可写状态
+  D = load(['test' num2str(d) '.ascii'],'-ascii');%将test' num2str(d) '.ascii以ascii格式读到D中
+  fprintf('%5d Digits of class %d\n',size(D,1),d);
+  save(['test' num2str(d) '.mat'],'D','-mat');%将D中信息存储为到mat文件中
+end;

@@ -1,0 +1,12 @@
+function [ah h1 h2]=youtuyouzhenxiang
+t = 0:0.5:2*pi;
+x = sin(t);
+y = 2*cos(t);
+tt= [0:0.5/11:2*pi];
+xx = interp1(t,x,tt,'spline');
+% yy = ;%平滑系数是什么
+yy = interp1(t,y,tt,'spline');
+[ah h1 h2]=plotyy([tt t],[xx x],[tt t],[yy y]);
+set(h1,'LineStyle','-');
+% plot(t,x,'r*');hold on;plot(t,y,'m');
+end

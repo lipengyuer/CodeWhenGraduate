@@ -1,0 +1,20 @@
+function [data1 data2]=chuli%[cc1 cc2 dd ee hh ii jj kk ll mm nn totalretweet  notrealtext realtext  wuyiyizhuanfabi  rptcnt_  cmtcnt_]=chuli
+s1='C:\Users\admini\Desktop\aaaaa\zhanghaoshibie\auserzhenchang_outyuan.txt';
+s2='C:\Users\admini\Desktop\aaaaa\zhanghaoshibie\userlaji1.txt';
+s3='C:\Users\admini\Desktop\aaaaa\zhanghaoshibie\userlajiweibo__out2.txt';
+data1=zhuanhuanshuxing(s1,s3);
+data2=zhuanhuanshuxing(s2,s3);
+
+alldata3=[data1 ones(length(data1),1) zeros(length(data1),1);data2 zeros(length(data2),1) ones(length(data2),1)];
+%     zhanghushibieshuju=data;
+faweishixu;
+alldata4=[alldata3 alldata];
+alldata=alldata4;
+    save('C:\Users\admini\Desktop\aaaaa\zhanghaoshibie\data_qianjiaxinxiban.mat','alldata','-mat');
+end
+
+        
+    
+    
+    
+    

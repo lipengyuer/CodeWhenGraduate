@@ -1,0 +1,4 @@
+function shiyande
+for n=1:200
+    e=shiyanzifutihuan(n);
+   

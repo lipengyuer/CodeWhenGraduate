@@ -1,0 +1,104 @@
+% Version 1.000 
+%
+% Code provided by Geoff Hinton and Ruslan Salakhutdinov 
+%
+% Permission is granted for anyone to copy, use, modify, or distribute this
+% program and accompanying programs and documents for any purpose, provided
+% this copyright notice is retained and prominently displayed, along with
+% a note saying that the original programs are available from our
+% web page.
+% The programs and documents are distributed without any warranty, express or
+% implied.  As the programs were written for research purposes only, they have
+% not been tested to the degree that would be advisable in any important
+% application.  All use of these programs is entirely at the user's own risk.
+
+% This program trains Restricted Boltzmann Machine in which
+% visible, binary, stochastic pixels are connected to
+% hidden, binary, stochastic feature detectors using symmetrically
+% weighted connections. Learning is done with 1-step Contrastive Divergence.   
+% The program assumes that the following variables are set externally:
+% maxepoch  -- maximum number of epochs
+% numhid    -- number of hidden units 
+% batchdata -- the data that is divided into batches (numcases numdims numbatches)
+% restart   -- set to 1 if learning starts from beginning 
+
+epsilonw      = 0.01;   % Learning rate for weights 0.1
+epsilonvb     = 0.01;   % Learning rate for biases of visible units 0.1
+epsilonhb     = 0.01;   % Learning rate for biases of hidden units 0.1
+weightcost  = 0.0002;   %权损失，惩罚项0.0002
+initialmomentum  = 0.1;%5;%momentum-动量0.5
+finalmomentum    = 0.5;%0.9
+
+[numcases numdims numbatches]=size(batchdata);
+
+if restart ==1,
+  restart=0;
+  epoch=1;
+
+% Initializing symmetric weights and biases. 
+  vishid     = 0.1*randn(numdims, numhid);%%可见层与隐含层的连接权重；mnistdeepauto开头定义了隐含层第一层位数numhid=为1000；元素为0.1*x，其中x服从标准正态分布
+  hidbiases  = zeros(1,numhid);%隐含层的偏置
+  visbiases  = zeros(1,numdims);%可见层的偏置
+
+  poshidprobs = zeros(numcases,numhid);
+  neghidprobs = zeros(numcases,numhid);
+  posprods    = zeros(numdims,numhid);
+ 
+  negprods    = zeros(numdims,numhid);
+  vishidinc  = zeros(numdims,numhid);
+  hidbiasinc = zeros(1,numhid);
+  visbiasinc = zeros(1,numdims);
+  batchposhidprobs=zeros(numcases,numhid,numbatches);
+end
+
+for epoch = epoch:maxepoch,%迭代次数
+%  fprintf(1,'epoch %d\r',epoch); 
+ errsum=0;
+ for batch = 1:numbatches,
+%  fprintf(1,'epoch %d batch %d\r',epoch,batch); 
+
+%%%%%%%%% START POSITIVE PHASE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  data = batchdata(:,:,batch);%10000/100*784的矩阵；可见层输入
+  poshidprobs = 1./(1 + exp(-data*vishid - repmat(hidbiases,numcases,1)));%；sigmoid激活函数，值表示某隐含层单元激活的概率；隐含层节点为1的概率 ？？默认可见层单元全部为激活状态吗？？？   
+  batchposhidprobs(:,:,batch)=poshidprobs;%所有的激活概率存到一起
+  posprods    = data' * poshidprobs;%数值乘以概率---期望，难道是权值？？激活概率的作用是什么？？难道是隐含层的输出？？----RBM的输出
+  poshidact   = sum(poshidprobs);%沃特每个隐层节点对应的激活概率的和，后面可能求均值
+  posvisact = sum(data);%沃特每个可见层的节点对应的所有输入的和，也可能求均值
+
+%%%%%%%%% END OF POSITIVE PHASE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  poshidstates = poshidprobs > rand(numcases,numhid);%，隐层的状态。判断每一个对应元素是否大于。。。一个服从标准正态分布的数！？变成零一元素的矩阵了。。。？？前提是输入为01元素的矩阵，poshidprobs才是概率啊
+
+%%%%%%%%% START NEGATIVE PHASE  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  negdata = 1./(1 + exp(-poshidstates*vishid' - repmat(visbiases,numcases,1)));%poshidstates为尉迟敬德的激活状态；相当于输入通过RBM的输出，矩阵元素为零一；然后用可见层与隐层的连接权值反求输入negdata。
+  neghidprobs = 1./(1 + exp(-negdata*vishid - repmat(hidbiases,numcases,1)));%用反求到的negdata计算激活概率，元素为0-1的值。        
+  negprods  = negdata'*neghidprobs;
+  neghidact = sum(neghidprobs);
+  negvisact = sum(negdata); 
+
+%%%%%%%%% END OF NEGATIVE PHASE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  err= sum(sum( (data-negdata).^2 ));%%每一列求和,再求和就成一个数了数据重构误差的总和
+  errsum = err + errsum;
+
+   if epoch>5,
+     momentum=finalmomentum;
+   else
+     momentum=initialmomentum;
+   end;
+
+%%%%%%%%% UPDATE WEIGHTS AND BIASES
+%%%%%%%%% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 权值更新
+    vishidinc = momentum*vishidinc + ...%采用了动量学习率，使本次参数值修改的方向不完全由当前样本下的似然函数梯度方向决定昬 而采用上一次参数值修改方向与本次梯度方向的组合
+                epsilonw*( (posprods-negprods)/numcases - weightcost*vishid);%每个节点与很多节点相连，权值矩阵是二维；计算修正量；使用权衰减昨晷晥晩晧晨晴昭晤晥晣晡晹昩策略的主要目的是避免学习过程出现过拟合 昨景晶晥晲昌晴晴晩普晧昩现象昬 一般做法是在正常的梯度项后额外增加一项昬 以对较大的参数值作出惩罚
+    visbiasinc = momentum*visbiasinc + (epsilonvb/numcases)*(posvisact-negvisact); %所有节点的偏置，一维矩阵--对于不同的输入，每个节点的偏置不变，直到更新
+    hidbiasinc = momentum*hidbiasinc + (epsilonhb/numcases)*(poshidact-neghidact);% (epsilonhb/numcases)是啥意思10000个元的平均学习率？？？--对于不同的输入，每个节点的偏置不变，直到更新
+
+
+    vishid = vishid + vishidinc;%更新权值
+    visbiases = visbiases + visbiasinc;
+    hidbiases = hidbiases + hidbiasinc;
+
+%%%%%%%%%%%%%%%% END OF UPDATES %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+  end
+%   fprintf(1, 'epoch %4i error %6.1f  \n', epoch, errsum); 
+end;

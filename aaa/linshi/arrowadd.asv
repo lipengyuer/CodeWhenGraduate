@@ -1,0 +1,9 @@
+function s=arrowadd(coordinate_start,coordinate_end,words)%输入分别为起始坐标，箭头坐标，注释文字
+ x = 0:0.01:1; %正弦横坐标
+ y = sin(x*10);%正弦函数
+ plot(x,y);
+ point_start = [coordinate_start(1) coordinate_end(2)];
+ point_end = [coordinate_start(2) coordinate_end(2)];
+ h = annotation('textarrow',point_start,point_end);
+ set(h, 'string',words, 'fontsize', 15);
+ end

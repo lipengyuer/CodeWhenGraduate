@@ -1,0 +1,20 @@
+count=0;
+weizhi=zeros(1,8936);
+bu=sum(pincibuyiyu1);
+yi=sum(pinciyiyu1);
+for m=1:8936
+    if(bu(m)>0&&yi(m)>0)
+        count=count+1;
+        bi(m)=yi(m)/bu(m);
+    else bi(m)=-1;
+    end
+    fprintf('di %d\n',m);
+end
+for m=1:8936
+    if(bi(m)>4)
+        count1=count1+1;
+        weizhi(m)=1;
+    else weizhi()
+    end
+    fprintf('di %d\n',m);
+end

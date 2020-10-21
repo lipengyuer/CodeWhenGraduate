@@ -1,0 +1,243 @@
+function  [heji tianshu zhenshitianshu Store_num_weibo_perday_2013 TheFirstDay TheLastDay  DaoxiaoOfTime tian]=tongjifaweifenbu_yiyu(x)
+%   [heji tianshu zhenshitianshu Store_num_weibo_perday_2013 TheFirstDay TheLastDay  tian]=tongjifaweifenbu_yiyu(x)
+year=x(:,1);
+month=x(:,2);
+day=x(:,3);
+q=length(year); 
+move=100*x(:,4);
+x(:,4)=move;
+% jilutianshu=5;%记录多少天的数据
+nianshu=0;
+nianzaiti=year(1);
+
+for a=1:q
+    if(year(a)~=nianzaiti)
+        nianshu=nianshu+1;
+        nianzaiti=year(a);
+    end
+end
+nianshu=nianshu+1;%时间跨度是几年
+
+nian=zeros(nianshu,1);%每年分配一个存储器
+nian(1)=year(1);
+b=2;
+nianzaiti=year(1);
+for a=2:q
+    if(year(a)~=nianzaiti)
+        nian(b)=year(a);
+        nianzaiti=year(a);
+        b=b+1;
+    end
+end%nian存储年份（2013等）
+
+yueshu=0;
+ yuezaiti=month(1);
+for a=1:q
+    if(month(a)~=yuezaiti)
+        yueshu=yueshu+1;
+        yuezaiti=month(a);
+    end
+end
+yueshu=yueshu+1;%有多少个月
+
+yue=zeros(yueshu,1);
+yue(1)=month(1);
+b=2;
+ yuezaiti=month(1);
+for a=2:q
+    if(month(a)~=yuezaiti)
+        yue(b)=month(a);
+        yuezaiti=month(a);
+        b=b+1;
+    end
+end%yue存储月份
+
+
+tianshu=0;
+ tianzaiti=day(1);
+for a=1:q
+    if(day(a)~=tianzaiti)
+        tianshu=tianshu+1;
+        tianzaiti=day(a);
+    end
+end
+tianshu=tianshu+1;%计算天数%实际上是有多少天发了微博
+
+%%%%%%%%%%计算真实天数：第一天到最后一天的差（不考虑闰年）%%%%%%
+DaoxiaoOfTime=365*31*24*100*x(:,1)+24*31*100*x(:,2)+24*100*x(:,3)+x(:,4);%x的第四列已经乘以100了。
+TheFirst=find(DaoxiaoOfTime==min(DaoxiaoOfTime));
+TheLast=find(DaoxiaoOfTime==max(DaoxiaoOfTime));
+TheFirstDay=x(TheFirst(1),:);
+TheLastDay=x(TheLast(1),:);
+zhenshitianshu=0;
+
+if(TheFirstDay(1)==TheLastDay(1)&&TheFirstDay(2)==TheLastDay(2))%同年同月的情况的情况
+    zhenshitianshu=TheLastDay(3)-TheFirstDay(3)+1;
+end
+    
+if(TheFirstDay(1)==TheLastDay(1)&&TheFirstDay(2)~=TheLastDay(2))%同一年内的情况
+    for m=1:TheLastDay(2)-TheFirstDay(2)+1%相对第几个月
+        if(m==1)
+            if(TheFirstDay(2)==1||TheFirstDay(2)==3||TheFirstDay(2)==5||TheFirstDay(2)==7||TheFirstDay(2)==8||TheFirstDay(2)==10||TheFirstDay(2)==12)%大月
+                zhenshitianshu=zhenshitianshu+31-TheFirstDay(3)+1;
+%                 fprintf('1%f\n',TheFirstDay(2));
+            elseif(TheFirstDay(2)==4||TheFirstDay(2)==6||TheFirstDay(2)==9||TheFirstDay(2)==11)%小月
+                 zhenshitianshu=zhenshitianshu+30-TheFirstDay(3)+1;
+%                    fprintf('2%f\n',TheFirstDay(2));
+            else
+                zhenshitianshu=zhenshitianshu+28;
+%                   fprintf('3%f\n',TheFirstDay(2));
+            end
+        elseif(m==TheLastDay(2)-TheFirstDay(2)+1)
+                zhenshitianshu=zhenshitianshu+TheLastDay(3);
+%                   fprintf('L1%f\n',TheLastDay(2));
+        elseif(m~=1&&m~=TheLastDay(2)-TheFirstDay(2)+1)
+            if(TheFirstDay(2)+m-1==1||TheFirstDay(2)+m-1==3||TheFirstDay(2)+m-1==5||TheFirstDay(2)+m-1==7||TheFirstDay(2)+m-1==8||TheFirstDay(2)+m-1==10||TheFirstDay(2)+m-1==12)%大月
+                zhenshitianshu=zhenshitianshu+31;
+%                   fprintf('c1%f\n',TheFirstDay(2)+m-1);
+            elseif(TheFirstDay(2)+m-1==4||TheFirstDay(2)+m-1==6||TheFirstDay(2)+m-1==9||TheFirstDay(2)+m-1==11)%小月
+                 zhenshitianshu=zhenshitianshu+30;
+%                    fprintf('c2%f\n',TheFirstDay(2)+m-1);
+            else
+                zhenshitianshu=zhenshitianshu+28;
+%                   fprintf('c3%f\n',TheFirstDay(2)+m-1);
+            end
+        end
+    end
+end
+
+if(TheFirstDay(1)~=TheLastDay(1))%首尾微博跨年份的
+    for n=1:TheLastDay(1)-TheFirstDay(1)+1
+        if(n==1)
+             for m=1:12-TheFirstDay(2)+1%相对第几个月
+        if(m==1)
+            if(TheFirstDay(2)==1||TheFirstDay(2)==3||TheFirstDay(2)==5||TheFirstDay(2)==7||TheFirstDay(2)==8||TheFirstDay(2)==10||TheFirstDay(2)==12)%大月
+                zhenshitianshu=zhenshitianshu+31-TheFirstDay(3)+1;
+%                 fprintf('a1%f\n',TheFirstDay(2));
+            elseif(TheFirstDay(2)==4||TheFirstDay(2)==6||TheFirstDay(2)==9||TheFirstDay(2)==11)%小月
+                 zhenshitianshu=zhenshitianshu+30-TheFirstDay(3)+1;
+%                    fprintf('a2%f\n',TheFirstDay(2));
+            elseif(TheFirstDay(2)==2)
+                zhenshitianshu=zhenshitianshu+28-TheFirstDay(3)+1;
+%                   fprintf('a3%f\n',TheFirstDay(2));
+            end
+        elseif(m~=1)
+            if(TheFirstDay(2)+m-1==1||TheFirstDay(2)+m-1==3||TheFirstDay(2)+m-1==5||TheFirstDay(2)+m-1==7||TheFirstDay(2)+m-1==8||TheFirstDay(2)+m-1==10||TheFirstDay(2)+m-1==12)%大月
+                zhenshitianshu=zhenshitianshu+31;
+%                   fprintf('bc1%f\n',TheFirstDay(2)+m-1);
+            elseif(TheFirstDay(2)+m-1==4||TheFirstDay(2)+m-1==6||TheFirstDay(2)+m-1==9||TheFirstDay(2)+m-1==11)%小月
+                 zhenshitianshu=zhenshitianshu+30;
+%                    fprintf('bc2%f\n',TheFirstDay(2)+m-1);
+            elseif(TheFirstDay(2)+m-1==2)
+                zhenshitianshu=zhenshitianshu+28;
+%                   fprintf('bc3%f\n',TheFirstDay(2)+m-1);
+            end
+        end
+             end
+             
+        elseif(n==TheLastDay(1)-TheFirstDay(1)+1)
+             for m=1:TheLastDay(2)%相对第几个月
+        if(m==TheLastDay(2))
+                zhenshitianshu=zhenshitianshu+TheLastDay(3);
+%                   fprintf('cL1%f\n',TheLastDay(2));
+        elseif(m~=TheLastDay(2))
+            if(m==1||m==3||m==5||m==7||m==8||m==10||m==12)%大月
+                zhenshitianshu=zhenshitianshu+31;
+%                   fprintf('cc1%f\n',TheFirstDay(2)+m-1);
+            elseif(m==4||m==6||m==9||m==11)%小月
+                 zhenshitianshu=zhenshitianshu+30;
+%                    fprintf('cc2%f\n',TheFirstDay(2)+m-1);
+            elseif(m==2)
+                zhenshitianshu=zhenshitianshu+28;
+%                   fprintf('cc3%f\n',TheFirstDay(2)+m-1);
+            end
+        end
+             end
+             
+        else
+            zhenshitianshu=zhenshitianshu+365;
+       
+        end
+        
+    end
+    
+end
+    
+
+%%%%%%%%%%%%%%end计算真实天数%%%%%%%%%
+
+
+%%%%%%%统计2013年每天微博数%%%%%%%
+Store_num_weibo_perday_2013=zeros(365,1);
+load C:\Users\admini\Desktop\aaaaa\depression\stuty——hit——students\data\2013年日历（统计2013年发微博用）.mat
+for m=1:365
+    for n=1:size(x,1)
+    if(dataof3013forhit(m,1)==x(n,1)&&dataof3013forhit(m,2)==x(n,2)&&dataof3013forhit(m,3)==x(n,3))
+        Store_num_weibo_perday_2013(m,1)=Store_num_weibo_perday_2013(m,1)+1;
+    end
+    end
+end
+%%%%%%%%%%jiesuh统计2013年每天微博数%%%%%%%%%%%%%%
+
+tian=zeros(tianshu,1);
+tian(1)=day(1);
+b=2;
+ tianzaiti=day(1);
+for a=2:q
+    if(day(a)~=tianzaiti)
+        tian(b)=day(a);
+        tianzaiti=day(a);
+        b=b+1;
+    end
+end%tian存储天数
+
+[xx xxx tianshu1]=cunchushijian_zhanghushibie(tianshu,yueshu,x,tian,yue,q);
+lll=size(xx,2);
+ yitianzhuanfashu=zeros(tianshu,1);               
+for a=1:tianshu%size(xx,2)
+    for b=1:(length(xx)-1)
+        if(xx(b,a)>xx(b+1,a))
+        yitianzhuanfashu(a)=b;
+        end
+    end
+end%yitianzhuanfashu存储各天的转发次数
+
+
+xiaoshiduanshu=1;
+shijianduanshu=24*xiaoshiduanshu;%一天被分为几段
+zhuanfafenbu=zeros(shijianduanshu,tianshu);
+
+yixiaoshiduanshu=shijianduanshu/24;
+for a=1:tianshu
+    for m=0:(shijianduanshu-1)
+           for b=1:yitianzhuanfashu(a)  
+            if (xx(b,a)>=(m/yixiaoshiduanshu-fix(m/yixiaoshiduanshu))*60+100*fix(m/yixiaoshiduanshu)&&xx(b,a)<10*(6/xiaoshiduanshu)+(m/yixiaoshiduanshu-fix(m/yixiaoshiduanshu))*60+100*fix(m/yixiaoshiduanshu));%"10"是十分钟的意思
+             zhuanfafenbu(m+1,a)=zhuanfafenbu(m+1,a)+1;
+%              fprintf('%f\n',xx(b,a));
+            end
+           end
+  
+    end%统计各天的转发次数分布
+end
+
+heji=zeros(tianshu*shijianduanshu,1);
+
+jishuqi=1;
+for a=1:tianshu
+    for b=1:shijianduanshu
+    heji(jishuqi)=zhuanfafenbu(b,a);
+    jishuqi=jishuqi+1;
+    end
+end
+
+len=0;
+for a=1:length(heji)
+    if(heji(a)~=0)
+       len=a;
+        break
+    end
+end
+
+zhenheji=heji(len:length(heji),1);
+
+% end     

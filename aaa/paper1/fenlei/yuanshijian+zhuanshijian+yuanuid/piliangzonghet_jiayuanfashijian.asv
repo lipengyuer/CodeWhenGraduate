@@ -1,0 +1,33 @@
+function [hezi z]=piliangzonghet_jiayuanfashijian%批量处理，输出是z（各条微博的传播曲线），hezi（零点对齐并求和的结果）
+jilutianshu=5;
+z=zeros(144*jilutianshu,1);
+hezi=zeros(144*jilutianshu,1);
+tiaozz=zeros(144*jilutianshu,1);
+wenjianjiadizhi={'C:\Users\admini\Desktop\aaaaa\dataaaaaa\Time14\','C:\Users\admini\Desktop\aaaaa\dataaaaaa\Time15\','C:\Users\admini\Desktop\aaaaa\dataaaaaa\Time16\','C:\Users\admini\Desktop\aaaaa\dataaaaaa\Time17\','C:\Users\admini\Desktop\aaaaa\dataaaaaa\Time22\',};
+middizhi={'C:\Users\admini\Desktop\aaaaa\pengyu\14mid.txt','C:\Users\admini\Desktop\aaaaa\pengyu\15mid.txt','C:\Users\admini\Desktop\aaaaa\pengyu\16mid.txt','C:\Users\admini\Desktop\aaaaa\pengyu\17mid.txt','C:\Users\admini\Desktop\aaaaa\pengyu\22mid.txt'};
+for m=1:5
+    mid=textread(middizhi{cixu},'%s','headerlines',0);
+    while(ex)%txt文件名的范围
+        s=strcat(wenjianjiadizhi,mid{n});%连接字符串（文件夹名和txt文件名）
+     
+        w=load(strcat(s,'.txt'));
+
+        fprintf('%d\n',n);
+
+        if ~isempty(w)
+
+    
+            [jieguo]=piliangzht(w);%piliangzht(w);没有粉丝等列
+    
+            hezi=hezi+jieguo;
+    
+            z(:,n)=jieguo;
+    
+  
+
+        else z(:,n)=zeros(144*jilutianshu,1);
+
+        end
+        
+    end
+end

@@ -1,0 +1,113 @@
+% clear;
+load C:\Users\admini\Desktop\aaaaa\depression\计算属性值用数据.mat
+load C:\Users\admini\Desktop\aaaaa\depression\表情符号原始数据.mat
+x=Cipin0524;
+a=x(1:108,:);
+b=x(109:end,:);
+
+a1=a(:,:);
+b1=b(:,:);
+aa=sum(a1,2)+0.000001;
+bb=sum(b1,2)+0.000001;
+cipin_1_ciyu=a1./repmat(aa,1,size(a1,2));
+cipin_2_ciyu=b1./repmat(bb,1,size(b1,2));
+cipin_1_mean=mean(cipin_1_ciyu);
+cipin_2_mean=mean(cipin_2_ciyu);
+clear a b a1 b1 aa bb;
+% % %%%%检验词频均值%%%
+% for m=1:size(a1,2)
+%     h(m)=ztest(cipin_1_ciyu(:,m),mean(cipin_1_ciyu(:,m)),0.05);
+% end;
+% cipindaxiao_buyiyu=-sort(-sum(cipin_2_ciyu));%将词频由大到小排列
+% cipindaxiao_yiyu=-sort(-sum(cipin_1_ciyu));%将词频由大到小排列
+% weizhi_buyiyu=[];
+% weizhi_yiyu=[];
+% for m=1:1000%提取词语的个数
+%     weizhi_buyiyu=[weizhi_buyiyu find(sum(cipin_2_ciyu)==cipindaxiao_buyiyu(1,m))];
+%     weizhi_yiyu=[weizhi_yiyu find(sum(cipin_1_ciyu)==cipindaxiao_yiyu(1,m))];
+%     fprintf('第n=%d个词语\n',m);
+% end
+weizhi_buyiyu=1:8921;
+fprintf('处理词频');
+data_cipin=[cipin_1_ciyu(:,weizhi_buyiyu);cipin_2_ciyu(:,weizhi_buyiyu)];
+% weizhi1=find(s
+% [data_cipin_guiyihua  ]= 
+% figure;
+% plot(sum(cipin_1_ciyu(:,weizhi_buyiyu))/108,'r');hold on,plot(sum(cipin_2_ciyu(:,weizhi_buyiyu))/273);
+
+%%%%%%%%表情符号%%%%
+x=[cipin0425_1qgfh1;cipin0425_2qgfh1];
+a=x(1:108,:);
+b=x(109:end,:);
+weizhi1=find(sum(b)>0);
+a1=a(:,:);
+b1=b(:,:);
+aa=sum(a1,2)+0.000001;
+bb=sum(b1,2)+0.000001;
+cipin_1_ciyuqgfh=a1./repmat(aa,1,size(a1,2));
+cipin_2_ciyuqgfh=b1./repmat(bb,1,size(b1,2));
+clear a b a1 b1 aa bb;
+% %%%%检验词频均值%%%
+% for m=1:size(a1,2)
+%     h(m)=ztest(cipin_1_ciyuqgfh(:,m),mean(cipin_1_ciyuqgfh(:,m)),0.05);
+% end;
+cipindaxiao_buyiyuqgfh=-sort(-sum(cipin_2_ciyuqgfh));%将词频由大到小排列
+cipindaxiao_yiyuqgfh=-sort(-sum(cipin_1_ciyuqgfh));%将词频由大到小排列
+weizhi_buyiyuqgfh=[];
+weizhi_yiyuqgfh=[];
+for m=1:268%提取词语的个数
+    weizhi_buyiyuqgfh=[weizhi_buyiyuqgfh find(sum(cipin_2_ciyuqgfh)==cipindaxiao_buyiyuqgfh(1,m))];
+    weizhi_yiyuqgfh=[weizhi_yiyuqgfh find(sum(cipin_1_ciyuqgfh)==cipindaxiao_yiyuqgfh(1,m))];
+    fprintf('第n=%d个词语\n',m);
+end
+data_qgfh=[cipin_1_ciyuqgfh(:,weizhi_buyiyuqgfh); cipin_2_ciyuqgfh(:,weizhi_buyiyuqgfh)];
+
+
+fawei_num=zhenheji';
+fawei_num_yiyu=fawei_num(1:108,:);
+fawei_num_buyiyu=fawei_num(109:end,:);
+faweifenbu_yiyu=fawei_num_yiyu./repmat(sum(fawei_num_yiyu,2),1,size(fawei_num_yiyu,2));
+faweifenbu_buyiyu=fawei_num_buyiyu./repmat(sum(fawei_num_buyiyu,2),1,size(fawei_num_buyiyu,2));
+fawei_num_hit=zhenheji_hit';
+faweifenbu_hit=fawei_num_hit./repmat(sum(fawei_num_hit,2),1,size(fawei_num_hit,2));
+
+label=[ones(108,1);zeros(273,1)];
+label=[label 1-label];%标签 
+load C:\Users\admini\Desktop\aaaaa\depression\粉丝和关注数据.mat
+
+
+
+
+label4relief=label(:,1);
+fprintf('发微分布');
+data_fawei=[faweifenbu_yiyu;faweifenbu_buyiyu];%381的发微数据
+data=[data_cipin data_fawei label4relief];
+fprintf('relief');
+
+[Woffeatures]= ReliefF([data_cipin  label(:,1)],100,1);%/max(max(data_cipin))
+ordernum=[1:size(data_cipin,2)]';
+aftersorting_cipin=-sortrows(-[Woffeatures(end,:)' ordernum],1);
+xuyaodeshuxing_cipin=aftersorting_cipin(:,2);
+
+% [Woffeatures]= ReliefF([data_fawei label(:,1)],100,1);
+% ordernum=[1:size(data_fawei,2)]';
+% aftersorting_fawei=-sortrows(-[Woffeatures(end,:)' ordernum],1);
+% xuyaodeshuxing_fawei=aftersorting_fawei(:,2);
+% 
+% [Woffeatures]= ReliefF([data_qgfh label(:,1)],100,1);
+% ordernum_qgfh=[1:size(data_qgfh,2)]';
+% aftersorting_qgfh=-sortrows(-[Woffeatures(end,:)' ordernum_qgfh],1);
+% xuyaodeshuxing_qgfh=aftersorting_qgfh(:,2);
+
+% alldata1=[data_cipin data_fawei data_qgfh];
+% [Woffeatures WW]= ReliefF([alldata1 label(:,1)],100,1);
+% ordernum_qgfh=[1:size(alldata1,2)]';
+% aftersorting_qgfh=-sortrows(-[Woffeatures(end,:)' ordernum_qgfh],1);
+% xuyaodeshuxing_qgfh=aftersorting_qgfh(:,2);
+% % xuyaodeshuxing_qgfh=find(Woffeatures>(xuyaodeshuxing_qgfh(101)));
+% alldata=[ alldata1(:,xuyaodeshuxing_qgfh(1:200)) label];
+alldata=[ data_cipin(:,xuyaodeshuxing_cipin(1:400)) label];
+%  data_fawei(:, xuyaodeshuxing_fawei(1:10))
+%   data_cipin(:,xuyaodeshuxing_cipin(1:20)) 
+% data_fawei(:, xuyaodeshuxing_fawei(1:24))
+% data_eco=

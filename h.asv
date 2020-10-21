@@ -1,0 +1,46 @@
+function r=h(x);
+x=x';
+x1=x(1,:);
+y1=x(2,:);
+x2=x(3,:);
+y2=x(4,:);
+x3=x(5,:);
+y3=x(6,:);
+x4=x(7,:);
+y4=x(8,:);
+x5=x(9,:);
+y5=x(10,:);
+x6=x(11,:);
+y6=x(12,:);
+
+b1=zeros(1,288)';
+g1=zeros(1,288)';
+b2=zeros(1,288)';
+g2=zeros(1,288)';
+b3=zeros(1,288)';
+g3=zeros(1,288)';
+b4=zeros(1,288)';
+g4=zeros(1,288)';
+b5=zeros(1,288)';
+g5=zeros(1,288)';
+b6=zeros(1,288)';
+g6=zeros(1,288)';
+      
+for m=0:23
+          for n=0:11
+             for a=1:length(x1)
+                
+                 if x1(a)>=(m+0.05*n)&&x1(a)<(m+0.05*n+0.05)
+                  b(m*12+n+1)=b(m*12+n+1)+1;
+                  g(m*12+n+1)=g(m*12+n+1)+y1(a);
+                 end
+             end
+          end
+       end
+
+end     
+      
+
+ 
+   
+    

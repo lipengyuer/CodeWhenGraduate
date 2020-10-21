@@ -1,0 +1,9 @@
+Num_ganqingfuhao=load('C:\Users\admini\Desktop\aaaaa\depression\NLP\biaoqingfuhao\qingganfuhao.txt');
+Fenbu_ganqingduhao=Num_ganqingfuhao(1:110,:)./Num_ganqingfuhao(1:110,:)+0.000000001;
+zhengxiangbi2=Num_ganqingfuhao(111:end,:)./Num_ganqingfuhao(111:end,:)+0.000000001;
+% zhongxingbi1=Num_ganqingfuhao(1:110,3)./Num_ganqingfuhao(1:110,1)+0.000000001;
+% zhongxingbi2=Num_ganqingfuhao(111:end,3)./Num_ganqingfuhao(111:end,1)+0.000000001;
+% fuxiangbi1=Num_ganqingfuhao(1:110,4)./Num_ganqingfuhao(1:110,1)+0.000000001;
+% fuxiangbi2=Num_ganqingfuhao(111:end,4)./Num_ganqingfuhao(111:end,1)+0.000000001;
+figure;
+plot(zhengxiangbi1,'g');hold on,plot()

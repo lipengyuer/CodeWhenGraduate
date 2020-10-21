@@ -1,0 +1,164 @@
+% [uid yonghuming xingbie ziwojieshao chengshiweizhi shen shi fensishu guanzhushu hufenshu zhuangtaishu guanzhushu chuanjianyuerishikeCSTshismnian shifourenzheng renzhengleixing]=gerenziliao_yiyu
+dizhi='C:\Users\admini\Desktop\aaaaa\depression\gerenziliao_all.txt';
+[uid yonghuming xingbie ziwojieshao chengshiweizhi shen shi fensishu guanzhushu hufenshu zhuangtaishu shoucangshu chuanjianyuerishikeCSTshismnian shifourenzheng renzhengleixing]=textread(dizhi,'%s%s%s%s%s%d%d%d%d%d%d%d%s%s%d','headerlines',0);
+for m=1:length(uid)
+    %用户名
+%     jishuqi=0;
+    
+    shifouyingwenzimu=isletter(yonghuming{m});
+%     for n=1:length(shifouyingwenzimu)
+%         for o=1:52
+%             if()jishuqi
+    yonghuming_yingwenzimugeshu(m,1)=sum(shifouyingwenzimu);
+    yonghuming_chandu(m,1)=length(shifouyingwenzimu);
+    if(yonghuming_chandu(m,1)~=0)
+    yonghuming_yingwenbi(m,1)=yonghuming_yingwenzimugeshu(m,1)/(yonghuming_chandu(m,1));
+    else yonghuming_yingwenbi(m,1)=0;
+    end
+    
+    %性别
+    if(strcmp(xingbie{m},'f'))
+        xingbie_(m,:)=[1 0];
+    else xingbie_(m,:)=[0 1];
+    end
+    
+    %z自我介绍
+    shifouyingwenzimu=isletter(yonghuming{m});
+    ziwojieshao_yingwenzimugeshu(m,1)=sum(shifouyingwenzimu);
+    ziwojieshao_chandu(m,1)=length(shifouyingwenzimu);
+    ziwojieshao_yingwenbi(m,1)=ziwojieshao_yingwenzimugeshu(m,1)/(ziwojieshao_chandu(m,1));
+     if(ziwojieshao_chandu(m,1)~=0)
+   ziwojieshao_yingwenbi(m,1)=ziwojieshao_yingwenzimugeshu(m,1)/(ziwojieshao_chandu(m,1));
+    else ziwojieshao_yingwenbi(m,1)=0;
+     end
+    %粉丝数
+    
+    
+    %是否认证
+    if(strcmp(shifourenzheng{m},'false'))
+        shifourenzheng_(m,:)=[0 1];
+    else shifourenzheng_(m,:)=[1 0];
+    end
+    
+    %认证类型
+    jin=eye(12);
+     if renzhengleixing(m)==-1
+        renzhengleixing_(m,:)=jin(1,:);
+    elseif renzhengleixing(m)==0
+        renzhengleixing_(m,:)=jin(2,:);
+        elseif renzhengleixing(m)==1
+        renzhengleixing_(m,:)=jin(3,:);
+        elseif renzhengleixing(m)==2
+        renzhengleixing_(m,:)=jin(4,:);
+        elseif renzhengleixing(m)==3
+        renzhengleixing_(m,:)=jin(5,:);
+        elseif renzhengleixing(m)==4
+        renzhengleixing_(m,:)=jin(6,:);
+        elseif renzhengleixing(m)==5
+        renzhengleixing_(m,:)=jin(7,:);
+        elseif renzhengleixing(m)==6
+        renzhengleixing_(m,:)=jin(8,:);
+        elseif renzhengleixing(m)==7
+        renzhengleixing_(m,:)=jin(9,:);
+        elseif renzhengleixing(m)==10
+        renzhengleixing_(m,:)=jin(10,:);
+        elseif renzhengleixing(m)==200
+        renzhengleixing_(m,:)=jin(11,:);
+        elseif renzhengleixing(m)==220
+        renzhengleixing_(m,:)=jin(12,:);
+     end
+    
+    %互粉占粉丝数比
+    if(fensishu(m)~=0)
+        hufenbi1_(m,1)=hufenshu(m)/fensishu(m);
+    else hufenbi1_(m,1)=0;
+    end
+    
+    %互粉占关注数比
+     if(fensishu(m)~=0)
+        hufenbi2_(m,1)=hufenshu(m)/fensishu(m);
+    else hufenbi2_(m,1)=0;
+     end
+    
+end
+data=[fensishu guanzhushu hufenshu zhuangtaishu shoucangshu];%[yonghuming_chandu yonghuming_yingwenzimugeshu yonghuming_yingwenbi xingbie_ ziwojieshao_yingwenzimugeshu ziwojieshao_chandu ziwojieshao_yingwenbi shifourenzheng_ renzhengleixing_ guanzhushu fensishu shoucangshu hufenshu hufenbi1_ hufenbi2_];
+%%用户
+dizhi_uid_all = 'C:\Users\admini\Desktop\aaaaa\depression\uid_all.txt';
+[uid_all] = textread(dizhi_uid_all,'%s','headerlines',0);
+
+for m=1:length(uid_all)
+    for n=1:length(uid)
+        if(strcmp(uid_all{m},uid{n}))
+            infor(m,:) = data(n,:);
+        end
+    end
+end
+
+infor(210,:)=[];%关注数过万，异常
+
+
+    [a1,b1] = hist(infor(1:273,1),20);
+    [a2,b2] = hist(infor(274:end,1),20);
+        
+    [a3,b3] = hist(infor(1:273,2),20);
+    [a4,b4] = hist(infor(274:end,2),20);
+    [a5,b5] = hist(infor(1:273,3),20);
+    [a6,b6] = hist(infor(274:end,3),20);
+%     figure;
+    figure;
+    subplot(2,2,1);
+    bar(b1,a1/sum(a1),'g');
+    title('(a)');
+    xlabel('number of fans)');
+    ylabel('f');
+    subplot(2,2,2);
+    bar(b2,a2/sum(a2),'r');
+    title('(b)');
+    xlabel('number of fans)');
+    ylabel('f');
+
+    subplot(2,2,3);
+    bar(b3,a3/sum(a3),'g');
+    title('(c)');
+    xlabel('number of followee');
+    ylabel('f');
+    subplot(2,2,4);
+    bar(b4,a4/sum(a4),'r');
+    title('(d)');
+    xlabel('number of followee');
+    ylabel('f');
+
+%     subplot(2,3,5);
+%     bar(b5,a5/sum(a5),'g');
+%     title('(a)');
+%     xlabel('number of reciprocal relationships');
+%     ylabel('f');
+%     subplot(2,3,6);
+%     bar(b6,a6/sum(a6),'r');
+%     title('(b)');
+%     xlabel('number of reciprocal relationships');
+%     ylabel('f');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    

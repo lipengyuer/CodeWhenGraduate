@@ -1,0 +1,13 @@
+[a1]=textread('C:\Users\admini\Downloads\train (2).txt','%s','headerlines',1);
+x=[];
+for m=1:length(a1)
+    x(m,:)=str2num(a1{m});
+    fprintf('one%d\n',m);
+end
+save C:\Users\admini\Desktop\aaaaa\shuzishibie\data.mat x(:,2:78)
+ji=eye(10);
+y=[];
+for m=1:length(x(:,1))
+    y(m,:)=ji(x(m,1)+1);
+     fprintf('two%d\n',m);
+end

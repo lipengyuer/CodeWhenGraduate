@@ -1,0 +1,8 @@
+function ljs=leijia(z);
+b=zeros(1,length(z));
+b[1]=z[1];
+for a=2:length(z)
+    b[a]==b[a-1]+z[a];
+end
+ljs=b;
+end

@@ -1,0 +1,6 @@
+
+%降维
+%删去为常量的特征
+%删去一直为零的特征
+weizhi=find(sum(alldata_)==0);
+alldata_x1(:,weizhi)=[];

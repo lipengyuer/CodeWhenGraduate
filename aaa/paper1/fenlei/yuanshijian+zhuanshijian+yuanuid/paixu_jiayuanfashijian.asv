@@ -1,0 +1,57 @@
+function w1=paixu_jiayuanfashijian 
+%  uidcunfangdizhi='C:\Users\admini\Desktop\aaaaa\pengyu\14mid.txt';
+ middizhi={'C:\Users\admini\Desktop\aaaaa\pengyu\7mid.txt','C:\Users\admini\Desktop\aaaaa\pengyu\10mid.txt','C:\Users\admini\Desktop\aaaaa\pengyu\11mid.txt','C:\Users\admini\Desktop\aaaaa\pengyu\15mid.txt','C:\Users\admini\Desktop\aaaaa\pengyu\16mid.txt','C:\Users\admini\Desktop\aaaaa\pengyu\17mid.txt','C:\Users\admini\Desktop\aaaaa\pengyu\18mid.txt','C:\Users\admini\Desktop\aaaaa\pengyu\20mid.txt','C:\Users\admini\Desktop\aaaaa\pengyu\21mid.txt','C:\Users\admini\Desktop\aaaaa\pengyu\22mid.txt'};
+ wenjiangeshu=[196 200 197 195  193 193 198 197 200 196 198 197 197];
+ yuanwenjiandizhi={'C:\Users\admini\Desktop\aaaaa\pengyu\timedata\afterchuli\at7\','C:\Users\admini\Desktop\aaaaa\pengyu\timedata\afterchuli\at10\','C:\Users\admini\Desktop\aaaaa\pengyu\timedata\afterchuli\at11\','C:\Users\admini\Desktop\aaaaa\pengyu\timedata\afterchuli\at15\','C:\Users\admini\Desktop\aaaaa\pengyu\timedata\afterchuli\at16\','C:\Users\admini\Desktop\aaaaa\pengyu\timedata\afterchuli\at17\','C:\Users\admini\Desktop\aaaaa\pengyu\timedata\afterchuli\at18\','C:\Users\admini\Desktop\aaaaa\pengyu\timedata\afterchuli\at20\','C:\Users\admini\Desktop\aaaaa\pengyu\timedata\afterchuli\at21\','C:\Users\admini\Desktop\aaaaa\pengyu\timedata\afterchuli\at22\',};
+ for cixu=7:9
+      uidjihe=textread(middizhi{cixu},'%s','headerlines',0);
+     for n=1:wenjiangeshu(cixu)%txt文件名的范围  
+        s=strcat(yuanwenjiandizhi{cixu},uidjihe{n});%连接文件夹名和txt文件名
+        ss=strcat(s,'.txt');
+        if(exist(ss,'file')==2)
+           [a1,a2,a3,a4,a5]=textread(ss,'%s%s%s%s%s','headerlines',0); 
+%            if(length(a1)>40000)
+%               a1=[];
+%            end
+           if ~isempty(a1)&&length(a1)>500;
+             zhuanfashijian=zifutihuan2(a1,a2);
+             yuanfashijian=zifutihuan2(a4,a5);
+              clear  a1 a2 a3 a4;    
+             w=[yuanfashijian(1,:);zhuanfashijian];
+             clear zhuanfashijian yuanfashijian;
+             xushu=zeros(length(w),1);
+             for m=1:length(w)
+                if(w(m,2)==1||w(m,2)==3||w(m,2)==5||w(m,2)==7||w(m,2)==8||w(m,2)==10||w(m,2)==12)
+                xushu(m,1)=(w(m,4)-fix(w(m,4)))*100+fix(w(m,4))*60000+24*w(m,3)*60000+24*31*w(m,2)*6000000+24*31*w(m,1)*600000000;
+                end
+                if(w(m,2)==4||w(m,2)==6||w(m,2)==9||w(m,2)==11)
+                xushu(m,1)=(w(m,4)-fix(w(m,4)))*100+fix(w(m,4))*60000+24*w(m,3)*60000+24*30*w(m,2)*6000000+24*31*w(m,1)*600000000;
+                end   
+                if(w(m,2)==2)%润年要小心
+                    xushu(m,1)=(w(m,4)-fix(w(m,4)))*100+fix(w(m,4))*60000+24*w(m,3)*60000+24*28*w(m,2)*6000000+24*31*w(m,1)*600000000;
+                end           
+%                 fprintf('1\r\n');
+             end   
+             shuichi=[w(:,1:4) xushu];
+             w1=sortrows(shuichi,5);
+%              clear w2 w;
+             sss=strcat(yuanwenjiandizhi{cixu},uidjihe{n});%连接文件夹名和txt文件名
+             sss=strcat(sss,'fu.txt');
+             fid1=fopen(sss,'wt');  
+             for m=1:length(w1)
+%                  fprintf('2\r\n');
+                 fprintf(fid1,'%d ',w1(m,1)); 
+                 fprintf(fid1,'%d ',w1(m,2)); 
+                 fprintf(fid1,'%f ',w1(m,3));   
+                 fprintf(fid1,'%f\r\n',w1(m,4));
+             end   
+%              clear w1;
+             fclose(fid1);
+           end              
+           fprintf('di %d ge wen jian\n',n);
+        end   
+     end
+        
+ end
+end
+    

@@ -1,0 +1,28 @@
+% data=[zhengchang zeros(592,1) ones(592,1);laji ones(987,1) zeros(987,1)];
+% data=[a,alldata(:,end-1:end)];
+% load alldata1
+% data=alldata1;
+data=alldata;
+shuhao=randperm(197);
+data1=[shuhao' data];
+data2=sortrows(data1,1);
+data3=data2(:,2:end);
+alldata1=data3;
+trainx=alldata1(1:150,1:end-1);
+testx=alldata1(151:197:end,1:end-1);
+trainy=alldata1(1:150,end);
+testy=alldata1(151:197,end);
+
+net=newff(trainx',trainy',[50 30]);
+net=train(net,trainx',trainy');
+
+an=sim(net,testx');
+% ann=[];
+% for jishuqi=1:length(testx)
+%     if(an(1,jishuqi)>0.5)
+%         ann(jishuqi,1)=1;
+%     else ann(jishuqi,1)=0;
+%     end
+% end
+% 
+% error=sum(abs(ann-testy(:,1)));

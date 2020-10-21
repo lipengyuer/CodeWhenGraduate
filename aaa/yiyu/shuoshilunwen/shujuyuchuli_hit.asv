@@ -1,0 +1,30 @@
+% 
+% x=Cipin0521_1;
+x=cipinofHIT_all;
+% x=cipinofHIT_all;
+weizhi=find(sum(x)>381*3);
+xx=x(:,weizhi);
+aa=sum(xx,2)+0.000001;
+cipin_1_ciyu=xx./repmat(aa,1,length(weizhi));
+clear xx a b aa bb;
+data1=cipin_1_ciyu;
+
+
+% x=zhenheji;
+% aa=sum(xx,2)+0.000001;
+% cipin_1=x./repmat(aa,1,size(x,2));;
+% clear a b aa bb;
+% data2=[cipin_1;cipin_2];
+
+x=UserInfor_EcoNetworkDegree;
+aa=sum(x,2)+0.000001;
+clear x;
+x=zhenheji';
+cipin_1=x./repmat(aa,1,size(x,2));
+clear a b aa bb;
+plot(cipin_1_,'r');hold on,plot(cipin_2_,'g');
+cipina=(cipin_1-repmat(cipin_1_,size(cipin_1,1),1))./repmat(cipin_1_,size(cipin_1,1),1);
+cipinb=(cipin_2-repmat(cipin_2_,size(cipin_2,1),1))./repmat(cipin_1_,size(cipin_2,1),1);
+data3=[cipina;cipinb];
+
+
